@@ -1,0 +1,680 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Results - Web Data Extractor</title>
+        <style>
+            :root {
+                --primary-color: #2980b9;
+                --primary-hover: #3498db;
+                --success-color: #27ae60;
+                --success-hover: #2ecc71;
+                --text-color: #2c3e50;
+                --text-light: #7f8c8d;
+                --bg-color: #f9fafe;
+                --card-bg: #ffffff;
+                --border-color: #dfe6e9;
+                --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            }
+            
+
+            body {
+                font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+                background: var(--bg-color);
+                color: var(--text-color);
+                margin: 0;
+                padding: 0 1rem 3rem;
+                line-height: 1.6;
+                background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            }
+            
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 0 1rem;
+            }
+            
+            h1 {
+                text-align: center;
+                margin: 1.5rem 0;
+                color: var(--text-color);
+                font-weight: 600;
+                font-size: 2rem;
+            }
+            
+            h2 {
+                color: var(--text-color);
+                margin: 1.5rem 0 1rem;
+                font-weight: 600;
+                font-size: 1.4rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            /* Header with source URL */
+            .source-url {
+                text-align: center;
+                margin: -1rem auto 1.5rem;
+                font-size: 0.9rem;
+                color: var(--text-light);
+                max-width: 800px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            /* Content sections */
+            .content-section {
+                background: var(--card-bg);
+                border-radius: 8px;
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                box-shadow: var(--shadow);
+                border: 1px solid var(--border-color);
+            }
+            
+            details summary {
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 1rem;
+                color: var(--primary-color);
+                user-select: none;
+                padding: 0.5rem;
+                border-radius: 4px;
+                transition: background-color 0.2s;
+            }
+            
+            details summary:hover {
+                background-color: #f1f9ff;
+            }
+            
+            details[open] summary {
+                margin-bottom: 0.75rem;
+            }
+            
+            details div {
+                background-color: #f8f9fa;
+                border: 1px solid var(--border-color);
+                padding: 1rem;
+                border-radius: 6px;
+                white-space: pre-wrap;
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 0.9rem;
+                color: #333;
+                line-height: 1.5;
+            }
+            
+            /* Tables */
+            table.data {
+                width: 100%;
+                margin: 1rem 0;
+                border-collapse: collapse;
+                box-shadow: var(--shadow);
+                font-size: 0.9rem;
+                background: white;
+                border-radius: 6px;
+                overflow: hidden;
+            }
+            
+            table.data thead {
+                background-color: var(--primary-color);
+                color: white;
+            }
+            
+            table.data th, table.data td {
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid var(--border-color);
+                text-align: left;
+            }
+            
+            table.data tbody tr:nth-child(even) {
+                background-color: #f8f9fa;
+            }
+            
+            table.data tbody tr:hover {
+                background-color: #f1f9ff;
+            }
+            
+            hr {
+                margin: 1.5rem 0;
+                border: none;
+                border-top: 1px solid var(--border-color);
+            }
+            
+            /* Error messages */
+            .error-message {
+                max-width: 800px;
+                margin: 1rem auto;
+                font-weight: 600;
+                font-size: 1rem;
+                color: #e74c3c;
+                padding: 1rem;
+                background: #fdecea;
+                border-radius: 6px;
+                border-left: 4px solid #e74c3c;
+            }
+            
+            .warning-message {
+                max-width: 800px;
+                margin: 1rem auto;
+                font-weight: 600;
+                font-size: 1rem;
+                color: #e67e22;
+                padding: 1rem;
+                background: #fef5e7;
+                border-radius: 6px;
+                border-left: 4px solid #e67e22;
+            }
+            
+            /* LLM Section */
+            .llm-section {
+                background-color: #f5f9ff;
+                border: 1px solid #d6e4ff;
+                border-radius: 10px;
+                padding: 1.5rem;
+                margin: 2rem 0;
+                box-shadow: var(--shadow);
+            }
+            
+            #ask-llm-form input[type="text"] {
+                width: 100%;
+                font-size: 1rem;
+                padding: 0.75rem 1rem;
+                border-radius: 6px;
+                border: 1px solid #c5d8f7;
+                transition: all 0.2s;
+                box-sizing: border-box;
+                margin-bottom: 0.5rem;
+            }
+            
+            #ask-llm-form input[type="text"]:focus {
+                border-color: var(--primary-color);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+            }
+            
+            #ask-llm-btn {
+                margin-top: 0.5rem;
+                background-color: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                font-weight: 600;
+                border-radius: 6px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                width: 100%;
+            }
+            
+            #ask-llm-btn:hover:enabled {
+                background-color: var(--primary-hover);
+            }
+            
+            #ask-llm-btn:disabled {
+                cursor: not-allowed;
+                background-color: #bdc3c7;
+            }
+            
+            /* Download Section */
+            #downloadSection {
+                margin-top: 1.5rem;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                align-items: center;
+                padding: 1rem;
+                background: white;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+            }
+            
+            #downloadSection label {
+                font-weight: 600;
+                color: var(--text-color);
+                margin-right: 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            #dataset_type, #format {
+                padding: 0.5rem 0.75rem;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+                font-size: 0.9rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                background: white;
+            }
+            
+            #dataset_type:focus, #format:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+            }
+            
+            #downloadSection button {
+                background-color: var(--success-color);
+                color: white;
+                border: none;
+                padding: 0.6rem 1.5rem;
+                font-weight: 600;
+                border-radius: 6px;
+                font-size: 0.9rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                flex-shrink: 0;
+            }
+            
+            #downloadSection button:hover {
+                background-color: var(--success-hover);
+            }
+            
+
+            .back-btn {
+            display: inline-block;
+            margin: 1rem auto 2rem auto;
+            padding: 10px 22px;
+            background-color: #2980b9;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 7px;
+            font-size: 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: background-color 0.3s ease;
+            }
+            .back-btn:hover {
+            background-color: #3498db;
+            }
+
+
+            /* LLM Result box */
+            #llm-result {
+                margin-top: 1.5rem;
+                background: white;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                padding: 1.25rem;
+                max-height: 350px;
+                overflow-y: auto;
+                box-shadow: var(--shadow);
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 0.9rem;
+                line-height: 1.5;
+                display: none;
+            }
+            
+            #llm-error {
+                color: #e74c3c;
+                margin-top: 1rem;
+                font-weight: 600;
+                padding: 0.75rem;
+                background: #fdecea;
+                border-radius: 6px;
+                display: none;
+            }
+            
+            /* Status indicators */
+            .status-indicator {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.85rem;
+                color: var(--text-light);
+                margin-bottom: 0.5rem;
+            }
+            
+            .status-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #2ecc71;
+            }
+            
+            /* Improved extracted text content */
+            .extracted-text-content {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 0.95rem;
+                line-height: 1.6;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+                max-height: 500px;
+                overflow-y: auto;
+            }
+
+            .extracted-text-content a {
+                color: var(--primary-color);
+                text-decoration: none;
+                word-break: break-all;
+            }
+
+            .extracted-text-content a:hover {
+                text-decoration: underline;
+            }
+
+            /* Improved list display */
+            .extracted-list-container {
+                max-height: 500px;
+                overflow-y: auto;
+                padding: 0.5rem;
+                background: #f8f9fa;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+            }
+
+            .extracted-list {
+                padding-left: 1.5rem;
+                margin: 0;
+            }
+
+            .extracted-list-item {
+                margin-bottom: 0.5rem;
+                word-break: break-word;
+                padding: 0.25rem 0;
+                line-height: 1.5;
+            }
+
+            .extracted-list-item a {
+                color: var(--primary-color);
+                text-decoration: none;
+                word-break: break-all;
+            }
+
+            .extracted-list-item a:hover {
+                text-decoration: underline;
+            }
+
+            /* Responsive tweaks */
+            @media (max-width: 768px) {
+                .container {
+                    padding: 0 0.75rem;
+                }
+                
+                h1 {
+                    font-size: 1.6rem;
+                }
+                
+                h2 {
+                    font-size: 1.2rem;
+                }
+                
+                #downloadSection {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 0.75rem;
+                }
+                
+                #downloadSection button {
+                    width: 100%;
+                }
+                
+                .content-section {
+                    padding: 1rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Extracted Content</h1>
+
+            <a href="/" class="back-btn" style="
+                display: inline-block;
+                margin: 1rem auto 2rem auto;
+                padding: 10px 22px;
+                background-color: var(--primary-color);
+                color: white;
+                text-decoration: none;
+                font-weight: 600;
+                border-radius: 7px;
+                font-size: 1rem;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+                transition: background-color 0.3s ease;
+            ">
+                ← Back to Home
+            </a>
+            
+            {% if request.form.get('url') %}
+                <div class="source-url">From: {{ request.form.get('url') }}</div>
+            {% endif %}
+
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+
+            {% if clean_text %}
+            <div class="content-section">
+                <h2>📝 Clean Extracted Text</h2>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>{{ clean_text|wordcount }} words extracted</span>
+                </div>
+                <details>
+                    <summary>Show / Hide Extracted Text</summary>
+                    <div>{{ clean_text }}</div>
+                </details>
+            </div>
+            {% endif %}
+
+            {% if text %}
+            <div class="content-section">
+                <h2>📄 Text Content</h2>
+                <div class="extracted-list-container">
+                    <ul class="extracted-list">
+                        {% for line in text %}
+                            <li class="extracted-list-item">{{ line }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if tables %}
+                <div class="content-section">
+                    <h2>📊 Extracted Tables</h2>
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span>{{ tables|length }} tables found</span>
+                    </div>
+                    {% for table in tables %}
+                        {{ table.to_html(classes="data", index=False) | safe }}
+                        {% if not loop.last %}<hr>{% endif %}
+                    {% endfor %}
+                </div>
+                
+            {% if tables and request.form.get('mode') == 'full' %}
+            <div class="content-section">
+                <h2>📥 Download Full Page Data</h2>
+                <form method="POST" action="/download" style="margin-top: 1rem;">
+                    <input type="hidden" name="url" value="{{ request.form.get('url') }}">
+                    <input type="hidden" name="mode" value="full">
+                    
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <div>
+                            <label for="fullpage_dataset_type" style="font-weight: 600; margin-right: 0.5rem;">Dataset:</label>
+                            <select name="dataset_type" id="fullpage_dataset_type" style="padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border-color);">
+                                <option value="tables">Tables Only</option>
+                                {% if clean_text %}
+                                <option value="clean_text">Clean Text</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="fullpage_format" style="font-weight: 600; margin-right: 0.5rem;">Format:</label>
+                            <select name="format" id="fullpage_format" style="padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border-color);">
+                                <option value="csv">CSV</option>
+                                <option value="excel">Excel</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" style="background-color: var(--success-color); color: white; border: none; padding: 0.6rem 1.5rem; font-weight: 600; border-radius: 6px; cursor: pointer;">
+                            Download
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+            {% elif text and not error %}
+                <div class="warning-message">⚠️ No tables found on this page, but text was extracted successfully.</div>
+            {% endif %}
+
+            <!-- LLM Section -->
+            {% if clean_text %}
+            <div class="llm-section">
+                <h2>🤖 Analyze with AI</h2>
+                <p style="margin-top: -0.5rem; margin-bottom: 1rem; color: var(--text-light); font-size: 0.9rem;">
+                    Ask questions about the extracted content
+                </p>
+
+                <form id="ask-llm-form">
+                    <textarea name="extracted_text" style="display:none;">{{ clean_text }}</textarea>
+                    <input type="text" name="query" id="llm-query" placeholder="e.g. Summarize the key points, extract product names and prices...">
+
+                    <button type="submit" id="ask-llm-btn">Ask AI</button>
+                </form>
+
+                
+                <!-- Download section -->
+                <form id="downloadSection" method="POST" action="/download">
+                    <input type="hidden" name="url" value="{{ request.form.get('url') }}">
+                    <input type="hidden" name="mode" value="{{ request.form.get('mode') }}">
+                    
+                    {% if request.form.get('mode') == 'tags' %}
+                        {% for tag in request.form.getlist('tags') %}
+                            <input type="hidden" name="tags[]" value="{{ tag }}">
+                        {% endfor %}
+                        <input type="hidden" name="class_filter" value="{{ request.form.get('class_filter') }}">
+                        <input type="hidden" name="id_filter" value="{{ request.form.get('id_filter') }}">
+                        <input type="hidden" name="skip_empty" value="{{ 'true' if 'skip_empty' in request.form else 'false' }}">
+                        <input type="hidden" name="skip_duplicates" value="{{ 'true' if 'skip_duplicates' in request.form else 'false' }}">
+                        <input type="hidden" name="skip_hidden" value="{{ 'true' if 'skip_hidden' in request.form else 'false' }}">
+                        <input type="hidden" name="depth" value="{{ request.form.get('depth', 'deep') }}">
+                    {% endif %}
+                    
+                    <input type="hidden" name="clean_text" value="{{ clean_text if clean_text else '' }}">
+                    <input type="hidden" name="llm_table_html" id="llm_table_html" value="">
+
+                    <label for="dataset_type">Dataset:</label>
+                    <select name="dataset_type" id="dataset_type">
+                        <option value="extracted">Extracted Data</option>
+                        {% if request.form.get('mode') == 'full' and tables %}
+                            <option value="tables">Tables Only</option>
+                        {% endif %}
+                        {% if clean_text %}
+                            <option value="clean_text">Clean Text</option>
+                        {% endif %}
+                    </select>
+
+                    <label for="format">Export as:</label>
+                    <select name="format" id="format">
+                        <option value="csv">CSV</option>
+                        <option value="excel">Excel</option>
+                    </select>
+
+                    <button type="submit">📥 Download</button>
+                </form>
+                <div id="llm-result"></div>
+                <div id="llm-error"></div>
+            </div>
+            {% endif %}
+        </div>
+
+        <script>
+        document.getElementById('ask-llm-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const btn = document.getElementById('ask-llm-btn');
+            const resultBox = document.getElementById('llm-result');
+            const errorBox = document.getElementById('llm-error');
+            const datasetTypeSelect = document.getElementById('dataset_type');
+            const llmTableHidden = document.getElementById('llm_table_html');
+
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = '';
+            errorBox.style.display = 'none';
+            errorBox.innerText = '';
+
+            const query = form.query.value && form.query.value.trim();
+            if (!query) {
+                errorBox.innerText = 'Please enter a question for the AI.';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            let extracted = form.extracted_text.value || '';
+            const MAX_CHARS = 100000;
+            if (extracted.length > MAX_CHARS) {
+                extracted = extracted.slice(0, MAX_CHARS);
+            }
+
+            const fd = new FormData();
+            fd.append('query', query);
+            fd.append('extracted_text', extracted);
+
+            try {
+                btn.disabled = true;
+                btn.innerText = 'Processing...';
+
+                const resp = await fetch('/ask_llm', {
+                    method: 'POST',
+                    body: fd
+                });
+
+                const data = await resp.json();
+
+                if (!resp.ok) {
+                    errorBox.innerText = data.error || 'Server returned an error.';
+                    errorBox.style.display = 'block';
+                    return;
+                }
+
+                if (data.html_table) {
+                    resultBox.innerHTML = `
+                        <div style="margin-bottom: 1rem; font-weight: 600; color: var(--primary-color);">
+                            AI Analysis Results
+                        </div>
+                        <div style="overflow-x:auto; padding:10px; background:#fff; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+                            ${data.html_table}
+                        </div>
+                        ${data.explanation ? `<div style="margin-top: 1rem; padding: 0.75rem; background: #f8f9fa; border-radius: 6px;">${data.explanation}</div>` : ''}
+                    `;
+                    resultBox.style.display = 'block';
+                    resultBox.scrollIntoView({ behavior: 'smooth' });
+
+                    // Save table HTML for download
+                    llmTableHidden.value = data.html_table;
+
+                    // Add LLM Output option if not already there
+                    if (![...datasetTypeSelect.options].some(opt => opt.value === 'llm')) {
+                        const opt = document.createElement('option');
+                        opt.value = 'llm';
+                        opt.textContent = 'AI Analysis';
+                        datasetTypeSelect.appendChild(opt);
+                    }
+                } else if (data.error) {
+                    errorBox.innerText = data.error;
+                    errorBox.style.display = 'block';
+                } else {
+                    errorBox.innerText = 'The AI response format was not recognized.';
+                    errorBox.style.display = 'block';
+                }
+
+            } catch (err) {
+                errorBox.innerText = 'Request failed: ' + err.message;
+                errorBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Ask AI';
+            }
+        });
+        </script>
+    </body>
+    </html>

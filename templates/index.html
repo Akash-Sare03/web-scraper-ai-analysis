@@ -1,0 +1,279 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Web Data Extractor - Extract Web Content Easily</title>
+        <style>
+            :root {
+                --primary-color: #2980b9;
+                --primary-hover: #3498db;
+                --text-color: #2c3e50;
+                --text-light: #7f8c8d;
+                --bg-color: #f5f7fa;
+                --card-bg: #ffffff;
+                --border-color: #dbe2e8;
+                --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            }
+            
+            body {
+                font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+                background-color: var(--bg-color);
+                margin: 0;
+                padding: 0;
+                color: var(--text-color);
+                line-height: 1.6;
+                background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            }
+            
+            .container {
+                max-width: 680px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+            
+            h1 {
+                text-align: center;
+                margin: 2.5rem 0 1.5rem;
+                color: var(--text-color);
+                font-weight: 600;
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                text-align: center;
+                color: var(--text-light);
+                margin: -1rem auto 2rem;
+                max-width: 500px;
+                font-size: 1.05rem;
+            }
+            
+            form {
+                background: var(--card-bg);
+                padding: 2rem 2.5rem;
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                border: 1px solid var(--border-color);
+                margin: 0 auto 3rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            
+            input[type="text"], select {
+                width: 100%;
+                padding: 12px 15px;
+                margin: 8px 0 4px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                font-size: 1rem;
+                box-sizing: border-box;
+                transition: all 0.3s ease;
+            }
+            
+            input[type="text"]:focus, select:focus {
+                border-color: var(--primary-color);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+            }
+            
+            label {
+                display: block;
+                margin-bottom: 6px;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 1.05rem;
+                color: var(--text-color);
+            }
+            
+            label input[type="radio"], label input[type="checkbox"] {
+                margin-right: 10px;
+                cursor: pointer;
+                accent-color: var(--primary-color);
+            }
+            
+            .description {
+                font-weight: normal;
+                color: var(--text-light);
+                font-size: 0.92rem;
+                margin-left: 26px;
+                margin-bottom: 1.2rem;
+                line-height: 1.4;
+            }
+            
+            #tag-options {
+                background: #f8fafc;
+                padding: 1.25rem 1.5rem;
+                border-radius: 10px;
+                border: 1px solid var(--border-color);
+                margin-top: 1rem;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+            }
+            
+            .tag-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 8px;
+                margin: 12px 0;
+            }
+            
+            #tag-options label {
+                display: flex;
+                align-items: center;
+                margin: 0;
+                font-weight: 500;
+                padding: 6px 8px;
+                border-radius: 4px;
+                transition: background-color 0.2s;
+            }
+            
+            #tag-options label:hover {
+                background-color: rgba(41, 128, 185, 0.05);
+            }
+            
+            button {
+                background-color: var(--primary-color);
+                color: white;
+                font-weight: 600;
+                border: none;
+                padding: 14px 24px;
+                font-size: 1.1rem;
+                border-radius: 8px;
+                cursor: pointer;
+                width: 100%;
+                margin-top: 10px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            button:hover {
+                background-color: var(--primary-hover);
+                transform: translateY(-1px);
+            }
+            
+            button:active {
+                transform: translateY(0);
+            }
+            
+            @media (max-width: 600px) {
+                form {
+                    padding: 1.5rem;
+                }
+                
+                h1 {
+                    font-size: 1.8rem;
+                    margin: 2rem 0 1rem;
+                }
+                
+                .tag-grid {
+                    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Web Data Extractor</h1>
+            <p class="subtitle">Extract clean text, tables, or specific HTML elements from any webpage</p>
+            
+            <form method="POST">
+                <input type="hidden" name="mode" id="formMode" value="full">
+                <div class="form-group">
+                    <label for="url">Website URL</label>
+                    <input type="text" name="url" placeholder="https://example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><input type="radio" name="mode" value="full" checked> Extract Full Page (tables, headings)</label>
+                    <div class="description">For table-based or structured data extraction. Gets all content including tables, lists, and headings.</div>
+                    
+                    <label><input type="radio" name="mode" value="clean"> Extract Clean Text (AI/NLP)</label>
+                    <div class="description">Get plain readable text without HTML clutter. Ideal for natural language processing.</div>
+                    
+                    <label><input type="radio" name="mode" value="tags"> Extract by HTML Tags</label>
+                    <div class="description">Advanced scraping by choosing specific HTML tags and filters.</div>
+                </div>
+                
+                <!-- HTML Tag Mode Options -->
+                <div id="tag-options" style="display: none;">
+                    <strong>Select Tags to Extract:</strong>
+                    <div class="tag-grid">
+                        <label><input type="checkbox" name="tags" value="p"> &lt;p&gt; Paragraphs</label>
+                        <label><input type="checkbox" name="tags" value="a"> &lt;a&gt; Links</label>
+                        <label><input type="checkbox" name="tags" value="div"> &lt;div&gt; Divs</label>
+                        <label><input type="checkbox" name="tags" value="span"> &lt;span&gt; Spans</label>
+                        <label><input type="checkbox" name="tags" value="h1"> &lt;h1&gt; Headings 1</label>
+                        <label><input type="checkbox" name="tags" value="h2"> &lt;h2&gt; Headings 2</label>
+                        <label><input type="checkbox" name="tags" value="ul"> &lt;ul&gt; Lists</label>
+                        <label><input type="checkbox" name="tags" value="ol"> &lt;ol&gt; Ordered Lists</label>
+                        <label><input type="checkbox" name="tags" value="li"> &lt;li&gt; List Items</label>
+                        <label><input type="checkbox" name="tags" value="button"> &lt;button&gt; Buttons</label>
+                        <label><input type="checkbox" name="tags" value="img"> &lt;img&gt; Images</label>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label>Filter by Class: <input type="text" name="class_filter" placeholder="e.g., product-title"></label>
+                        <label>Filter by ID: <input type="text" name="id_filter" placeholder="e.g., main-content"></label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <strong>Smart Options:</strong>
+                        <label><input type="checkbox" name="skip_empty" checked> Skip Empty/Duplicate Text</label>
+                        <label><input type="checkbox" name="skip_hidden" checked> Skip Hidden Elements</label>
+                        <label>
+                            Depth:
+                            <select name="depth">
+                                <option value="deep" selected>Deep (All Nested Tags)</option>
+                                <option value="shallow">Shallow (Top-Level Only)</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Extract Data
+                </button>
+            </form>
+        </div>
+
+        <script>
+        // Show/hide tag options only when mode is 'tags'
+        document.querySelectorAll('input[name="mode"]').forEach((radio) => {
+            radio.addEventListener('change', function() {
+                const tagOptions = document.getElementById('tag-options');
+                tagOptions.style.display = this.value === 'tags' ? 'block' : 'none';
+                
+                // Update the hidden mode field
+                document.getElementById('formMode').value = this.value;
+                
+                // Add animation when showing
+                if (this.value === 'tags') {
+                    tagOptions.style.opacity = '0';
+                    tagOptions.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        tagOptions.style.transition = 'all 0.3s ease';
+                        tagOptions.style.opacity = '1';
+                        tagOptions.style.transform = 'translateY(0)';
+                    }, 10);
+                }
+            });
+        });
+
+        // Ensure form submission includes the correct mode
+        document.querySelector('form').addEventListener('submit', function() {
+            const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+            document.getElementById('formMode').value = selectedMode;
+        });
+    </script>
+    </body>
+    </html>

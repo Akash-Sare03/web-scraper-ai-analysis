@@ -1,0 +1,48 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# Virtual environment
+venv/
+.env/
+.env.bak
+.venv/
+ENV/
+env/
+pip-wheel-metadata/
+
+# Playwright browser cache
+playwright/.local-browsers/
+.playwright/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Uploaded / generated files
+uploads/
+*.xlsx
+*.csv
+*.pdf
+
+# Flask instance folder
+instance/
