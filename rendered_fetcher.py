@@ -3,21 +3,30 @@ from playwright.sync_api import sync_playwright, TimeoutError
 def get_rendered_html(url):
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
+            # Launch Chromium with Render-friendly flags
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage"]
+            )
 
-            # Increase global timeout
+            # Create a context with custom User-Agent and HTTPS ignore
+            context = browser.new_context(
+                ignore_https_errors=True,
+                user_agent=(
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/115.0.0.0 Safari/537.36"
+                )
+            )
+
+            page = context.new_page()
             page.set_default_navigation_timeout(40000)
 
             try:
-                # Go to the URL and wait for some element (like body or a container)
+                # Load page and wait for content
                 page.goto(url, timeout=40000, wait_until='domcontentloaded')
-
-                # Explicitly wait for a stable DOM element (CNN uses body/main/container)
                 page.wait_for_selector('body', timeout=10000)
-
-                # Optional: wait extra time for JS widgets/lazy loads
-                page.wait_for_timeout(5000)
+                page.wait_for_timeout(5000)  # extra wait for JS-loaded content
 
                 html = page.content()
 
