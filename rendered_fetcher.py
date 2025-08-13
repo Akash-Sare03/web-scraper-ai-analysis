@@ -4,9 +4,16 @@ import os
 def get_rendered_html(url):
     try:
         with sync_playwright() as p:
-            # Configure launch options for Render
+            # Configure the exact browser path we know exists from logs
+            browser_path = "/opt/render/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell"
+            
+            # Fallback paths if the above doesn't work
+            if not os.path.exists(browser_path):
+                browser_path = "/opt/render/.cache/ms-playwright/chromium-1084/chrome-linux/chrome"
+            
             launch_options = {
                 'headless': True,
+                'executable_path': browser_path if os.path.exists(browser_path) else None,
                 'args': [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
@@ -19,11 +26,8 @@ def get_rendered_html(url):
                 ]
             }
             
-            # For Render specifically, set the browser path
-            if os.path.exists('/opt/render/.cache/ms-playwright/chromium-1084/chrome-linux/chrome'):
-                launch_options['executable_path'] = '/opt/render/.cache/ms-playwright/chromium-1084/chrome-linux/chrome'
-            
             browser = p.chromium.launch(**launch_options)
+            
 
             # Create a context with custom User-Agent and HTTPS ignore
             context = browser.new_context(
