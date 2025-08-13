@@ -243,7 +243,7 @@ def download_data():
             return send_file(
                 buffer,
                 mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                attachment_filename=f"web_data.xlsx",
+                download_name=f"web_data.xlsx",
                 as_attachment=True
             )
         else:
@@ -252,7 +252,7 @@ def download_data():
             return send_file(
                 buffer,
                 mimetype='text/csv',
-                attachment_filename=f"web_data.csv",
+                download_name=f"web_data.csv",
                 as_attachment=True
             )
 
