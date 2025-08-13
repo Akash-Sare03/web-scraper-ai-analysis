@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 
-echo "🔍 Installing Playwright Chromium + dependencies..."
-python -m playwright install --with-deps chromium
+echo "🔍 Installing dependencies for Playwright..."
+npx playwright install --with-deps chromium
 
-echo "🚀 Starting Web Data Extractor..."
-gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4
+echo "🚀 Starting the app..."
+python app.py

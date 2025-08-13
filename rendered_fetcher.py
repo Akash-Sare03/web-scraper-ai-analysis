@@ -1,13 +1,29 @@
 from playwright.sync_api import sync_playwright, TimeoutError
+import os
 
 def get_rendered_html(url):
     try:
         with sync_playwright() as p:
-            # Launch Chromium with Render-friendly flags
-            browser = p.chromium.launch(
-                headless=True,
-                args=["--no-sandbox", "--disable-dev-shm-usage"]
-            )
+            # Configure launch options for Render
+            launch_options = {
+                'headless': True,
+                'args': [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    '--no-zygote',
+                    '--single-process',
+                    '--disable-gpu'
+                ]
+            }
+            
+            # For Render specifically, set the browser path
+            if os.path.exists('/opt/render/.cache/ms-playwright/chromium-1084/chrome-linux/chrome'):
+                launch_options['executable_path'] = '/opt/render/.cache/ms-playwright/chromium-1084/chrome-linux/chrome'
+            
+            browser = p.chromium.launch(**launch_options)
 
             # Create a context with custom User-Agent and HTTPS ignore
             context = browser.new_context(
