@@ -67,22 +67,22 @@ This project combines **web scraping, data processing, and AI** to assist with r
 
 ## 📥 Installation
 
-# 1️⃣ Clone the repository
+**1️⃣ Clone the repository**
 git clone https://github.com/Akash-Sare03/web-scraper-ai-analysis.git
 cd web-scraper-ai-analysis
 
-# 2️⃣ Create a virtual environment
+**2️⃣ Create a virtual environment**
 python -m venv venv
 source venv/bin/activate   # On Mac/Linux
 venv\Scripts\activate      # On Windows
 
-# 3️⃣ Install dependencies
+**3️⃣ Install dependencies**
 pip install -r requirements.txt
 
-# 4️⃣ Create a .env file and add your API key
+**4️⃣ Create a .env file and add your API key**
 echo "GROQ_API_KEY=your_api_key_here" > .env
 
-# 5️⃣ Run the Flask server
+**5️⃣ Run the Flask server**
 python app.py
 
 ---
