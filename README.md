@@ -30,7 +30,7 @@ This project combines **web scraping, data processing, and AI** to assist with r
 
 ## 📸 Demo Preview
 
-### 1️⃣ Books to Scrape (E-commerce Data Extraction)
+### 1️⃣ Wikipedia GDP Data (Professional / Data Analysis) 
 
 **Step 1 — Extracting product data** 
 
@@ -42,7 +42,7 @@ This project combines **web scraping, data processing, and AI** to assist with r
 
 ---
 
-### 2️⃣ Wikipedia GDP Data (Professional / Data Analysis) 
+### 2️⃣ Books to Scrape (E-commerce Data Extraction) 
 
 **Step 1 — Extracting data** 
 
